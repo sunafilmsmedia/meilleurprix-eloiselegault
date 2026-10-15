@@ -40,29 +40,27 @@ export default function HeroBackground() {
           keyboard={false}
           style={{ width: "100%", height: "100%" }}
         >
-          {/* Esri « World Street Map » : sans clé d'API et sans filigrane.
-              Le rendu est coloré : c'est le filtre .map-mono qui le désature. */}
           <TileLayer
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
-            attribution="&copy; Esri, HERE, Garmin, &copy; OpenStreetMap"
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+            attribution="Tiles &copy; Esri"
           />
           <MapResizer />
         </MapContainer>
       </div>
 
-      {/* Voile blanc : la carte reste perceptible, le titre parfaitement lisible */}
+      {/* Voile bleu foncé : la carte reste perceptible, le titre parfaitement lisible */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.68) 45%, rgba(255,255,255,0) 100%)",
+            "radial-gradient(ellipse at 50% 32%, rgba(11,31,63,0.55) 0%, rgba(11,31,63,0.7) 40%, rgba(11,31,63,0.92) 100%)",
         }}
       />
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.12) 28%, rgba(255,255,255,0.12) 68%, rgba(234,247,254,1) 100%)",
+            "linear-gradient(180deg, rgba(11,31,63,0.75) 0%, rgba(11,31,63,0.35) 22%, rgba(11,31,63,0.45) 70%, rgba(11,31,63,0.96) 100%)",
         }}
       />
     </div>

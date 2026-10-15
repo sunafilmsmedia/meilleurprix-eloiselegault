@@ -5,8 +5,9 @@ import Image from "next/image";
 import { BRAND } from "@/lib/brand";
 
 // Les deux logos sont optionnels dans la config de marque : un slot sans logo
-// n'est simplement pas rendu (ici, pas de logo de bannière → coin droit vide
-// tant que `BRAND.logos.banner` n'est pas renseigné — voir le TODO dans brand.ts).
+// n'est simplement pas rendu. Le logo eXp (noir) est posé sur une pastille
+// blanche pour rester lisible sur le fond bleu foncé — son fichier d'origine
+// n'a qu'une version noire, pas de variante claire.
 export default function TopLogos() {
   const { team, banner } = BRAND.logos;
   // Le logo de bannière prime ; à défaut, on signe en toutes lettres.
@@ -18,7 +19,7 @@ export default function TopLogos() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed top-4 left-4 sm:top-6 sm:left-6 z-30 pointer-events-none"
+          className="fixed top-4 left-4 sm:top-6 sm:left-6 z-30 pointer-events-none rounded-xl bg-white/95 px-3 py-1.5 shadow-[0_8px_24px_-8px_rgba(3,10,24,0.5)]"
           aria-hidden
         >
           <Image
@@ -43,7 +44,7 @@ export default function TopLogos() {
           <p className="font-serif italic text-lg sm:text-xl text-[var(--color-brand-100)]">
             {wordmark.name}
           </p>
-          <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.18em] text-[var(--color-accent-deep)]">
+          <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.18em] text-[var(--color-gold-soft)]">
             {wordmark.tagline}
           </p>
         </motion.div>

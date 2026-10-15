@@ -6,9 +6,9 @@
 //  (+ lib/regions.ts pour la liste des secteurs, + les images dans /public,
 //   + les variables d'environnement pour les intégrations : voir .env.local.example)
 //
-//  Palette : blanc / bleu #00B8F0 (reprise de eval-justinlegault). Les couleurs
-//  se règlent dans app/globals.css (bloc @theme) — cherche les variables
-//  --color-brand-* et --color-accent.
+//  Palette : fond bleu foncé / texte blanc / accent bleu clair #00B8F0. Les
+//  couleurs se règlent dans app/globals.css (bloc @theme) — cherche les
+//  variables --color-brand-*, --color-gold et --color-slate-accent.
 //  Polices : Jost (titres), Poppins (corps), Montserrat (micro-typo) — app/layout.tsx.
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -115,7 +115,9 @@ export const BRAND: BrandConfig = {
   },
 
   logos: {
-    // eXp Agence immobilière — même logo/traitement que eval-justinlegault.
+    // eXp Agence immobilière — même logo/traitement que eval-justinlegault
+    // (posé sur une pastille blanche dans TopLogos.tsx pour rester lisible
+    // sur le fond bleu foncé : le fichier n'a qu'une version noire).
     team: {
       src: "/logo-exp.png",
       alt: "eXp Agence immobilière",
@@ -123,19 +125,17 @@ export const BRAND: BrandConfig = {
       height: 442,
       heightClass: "h-10 sm:h-12",
     },
-    // TODO: logo personnel d'Éloïse Legault (script bleu + icône maison, reçu
-    // en aperçu) — à enregistrer dans /public (ex. "/logo-eloiselegault.png"),
-    // mesurer sa largeur/hauteur réelles, puis décommenter :
-    // banner: {
-    //   src: "/logo-eloiselegault.png",
-    //   alt: "Éloïse Legault",
-    //   width: 400,
-    //   height: 150,
-    //   heightClass: "h-9 sm:h-11",
-    // },
+    // Logo personnel d'Éloïse Legault (script bleu + icône maison).
+    banner: {
+      src: "/logo-eloiselegault.webp",
+      alt: "Éloïse Legault",
+      width: 300,
+      height: 118,
+      heightClass: "h-9 sm:h-11",
+    },
   },
 
-  // Repli tant que le logo personnel n'est pas encore intégré (voir TODO ci-dessus).
+  // Repli si jamais le logo personnel (logos.banner) est retiré un jour.
   wordmark: {
     name: "Éloïse Legault",
     tagline: "Courtier immobilier résidentiel",
