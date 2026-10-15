@@ -1,0 +1,253 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  /* Display / titres */
+  --font-serif: "Jost", "Poppins", -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Corps de texte */
+  --font-sans: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Micro-typo : boutons, étiquettes, majuscules espacées */
+  --font-ui: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Gros titres display (.display-title, hérité du template « meilleur prix ») — chaîné sur Jost. */
+  --font-display: var(--font-serif);
+
+  --color-ink-950: #04222c;
+  --color-ink-900: #06303d;
+  --color-ink-800: #0a3d4d;
+  --color-ink-700: #0e4c5f;
+
+  /* Thème — blanc / bleu #00B8F0.
+     Nombres bas = texte foncé (bleu encre) lisible sur fond blanc ;
+     nombres hauts = remplissages de boutons/cartes en bleu. */
+  --color-brand-50: #f2fbff;
+  --color-brand-100: #06303d;
+  --color-brand-200: #0a3d4d;
+  --color-brand-300: #0e6d8f;
+  --color-brand-400: #0086bd;
+  --color-brand-500: #0098d4;
+  --color-brand-600: #0084bb;
+  --color-brand-700: #006e9e;
+  --color-brand-800: #005b83;
+  --color-brand-900: #004a6b;
+
+  /* Bleu de marque — accent, et couleur des titres (grandes tailles) */
+  --color-accent: #00b8f0;
+  --color-title: #00b8f0;
+  /* Variante foncée du même bleu, pour le TEXTE sur fond blanc (contraste) */
+  --color-accent-deep: #0077a8;
+
+  /* Alias « gold » → bleu, pour le template « meilleur prix » (hérité
+     d'Alexis Marcoux) qui référence --color-gold/--color-gold-soft comme
+     couleur d'accent partout (boutons, états sélectionnés, icônes). */
+  --color-gold: #00b8f0;
+  --color-gold-soft: #7fe0ff;
+
+  --color-slate-accent: #06303d;
+  --color-slate-soft: #00b8f0;
+
+  /* Textes secondaires — gris bleutés lisibles sur fond blanc */
+  --color-slate-300: #3f5966;
+  --color-slate-400: #4d6672;
+  --color-slate-500: #5f7885;
+  --color-slate-600: #38505c;
+}
+
+
+html, body {
+  background: linear-gradient(180deg, #ffffff 0%, #fbfeff 45%, #eaf7fe 100%);
+  color: #06303d;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Halo bleu en bas de l'écran — fixe, donc présent sur tous les écrans de
+   l'app. z-index négatif : il se peint au-dessus du fond du body mais sous
+   tout le contenu, et n'intercepte aucun clic. */
+body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42vh;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 184, 240, 0) 0%,
+    rgba(0, 184, 240, 0.06) 45%,
+    rgba(0, 184, 240, 0.16) 100%
+  );
+}
+
+/* Surface claire givrée (thème blanc white-label) */
+@utility glass-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 24px 60px -28px rgba(0, 0, 0, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.7) inset;
+}
+
+@utility glass-card-light {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 30px 80px -30px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+/* Titre d'affichage — gros bold majuscules large (hérité du template
+   « meilleur prix »), branché sur --font-display (= Jost, voir @theme). */
+@utility display-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 1.02;
+}
+
+/* AI shimmer — dégradé multicolore lent, reste doux */
+@keyframes ai-shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.ai-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    #06303d 0%,
+    #00b8f0 22%,
+    #7fe0ff 44%,
+    #06303d 62%,
+    #00b8f0 82%,
+    #06303d 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: ai-shimmer 8s linear infinite;
+}
+.ai-shimmer-fast {
+  background-image: linear-gradient(
+    90deg,
+    #06303d 0%,
+    #00b8f0 22%,
+    #7fe0ff 44%,
+    #06303d 62%,
+    #00b8f0 82%,
+    #06303d 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: ai-shimmer 2.5s linear infinite;
+}
+
+/* Pulse dot */
+@keyframes soft-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+}
+
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: soft-pulse 1.8s ease-in-out infinite;
+  opacity: 0.5;
+}
+
+/* Carte fond non-interactive — monochrome gris, rues visibles */
+.map-mono {
+  filter: grayscale(0.85) contrast(1.12) brightness(1.04) opacity(0.75);
+}
+
+.map-no-interaction {
+  pointer-events: none !important;
+}
+
+/* Leaflet attribution discrète */
+.leaflet-container {
+  background: transparent !important;
+  font-family: var(--font-sans);
+}
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.6) !important;
+  color: rgba(0,0,0, 0.5) !important;
+  font-size: 10px !important;
+  padding: 2px 6px !important;
+  border-radius: 4px;
+}
+.leaflet-control-attribution a {
+  color: rgba(0,0,0, 0.75) !important;
+}
+
+/* Étiquettes (tooltips) Leaflet sur la carte régions */
+.region-label {
+  background: rgba(255, 255, 255, 0.97) !important;
+  border: 1px solid rgba(0,0,0, 0.25) !important;
+  color: #06303d !important;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 4px 10px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 6px 20px -6px rgba(0,0,0, 0.3) !important;
+}
+.region-label::before {
+  display: none !important;
+}
+
+/* Scrollbar discrète */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0, 0.4); }
+
+/* Micro-typo : Montserrat sur tout ce qui est interactif (boutons, CTA). */
+button {
+  font-family: var(--font-ui);
+  font-weight: 600;
+}
+
+/* Titres : Jost en semi-gras. Le 400 par défaut est trop fin aux grandes
+   tailles, surtout en cyan sur blanc où le trait manque de matière. */
+.font-serif {
+  font-weight: 600;
+}
+
+/* Corps de texte un cran au-dessus du 400 pour la même raison. */
+body {
+  font-weight: 450; /* retombe sur 500, la graisse chargée la plus proche */
+}
+
+/* Inputs sans bordures par défaut */
+input, textarea, select {
+  background: transparent;
+  outline: none;
+  border: none;
+}
+input:focus, textarea:focus, select:focus { outline: none; }
