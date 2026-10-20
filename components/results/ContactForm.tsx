@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { trackLeadWithMatching } from "../MetaPixel";
+import { attributionForSubmit } from "@/lib/attribution";
 import { trackStep } from "@/lib/track";
 import { BRAND } from "@/lib/brand";
 import type { Answers, Verdict } from "@/lib/types";
@@ -15,23 +16,6 @@ interface Props {
   // toujours leadType=evaluation (la promesse de non-stockage si
   // défavorable reste honorée côté API).
   gated?: boolean;
-}
-
-// Attribution Meta : fbclid (URL ou cookie _fbc) + cookies _fbc/_fbp.
-function getFbData(): { fbclid?: string; fbc?: string; fbp?: string } {
-  if (typeof window === "undefined") return {};
-  try {
-    const cookie = (n: string) =>
-      document.cookie.split("; ").find((c) => c.startsWith(n + "="))?.split("=")[1];
-    const fbc = cookie("_fbc");
-    const fbp = cookie("_fbp");
-    let fbclid = new URLSearchParams(window.location.search).get("fbclid") ?? undefined;
-    // Cookie _fbc = "fb.1.<timestamp>.<fbclid>" — repli si l'URL n'a plus le param.
-    if (!fbclid && fbc) fbclid = fbc.split(".")[3] || undefined;
-    return { fbclid, fbc: fbc ? decodeURIComponent(fbc) : undefined, fbp };
-  } catch {
-    return {};
-  }
 }
 
 export default function ContactForm({ answers, verdict, onSubmitted, gated }: Props) {
@@ -76,7 +60,7 @@ export default function ContactForm({ answers, verdict, onSubmitted, gated }: Pr
           consent,
           answers,
           leadType,
-          ...getFbData(),
+          attribution: attributionForSubmit(),
         }),
       });
       const data = await res.json();

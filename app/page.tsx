@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Hero from "@/components/Hero";
 import TopLogos from "@/components/TopLogos";
 import QualificationForm from "@/components/QualificationForm";
@@ -11,6 +11,7 @@ import PreRevealScreen from "@/components/PreRevealScreen";
 import NoSellScreen from "@/components/NoSellScreen";
 import ResultsScreen from "@/components/results/ResultsScreen";
 import { trackStep } from "@/lib/track";
+import { captureAttribution } from "@/lib/attribution";
 import type { AnalyzeResponse, Answers } from "@/lib/types";
 
 const HeroBackground = dynamic(() => import("@/components/HeroBackground"), { ssr: false });
@@ -24,6 +25,12 @@ export default function Home() {
   const [answers, setAnswers] = useState<Answers | null>(null);
   const [analyze, setAnalyze] = useState<AnalyzeResponse | null>(null);
   const [revealChoice, setRevealChoice] = useState<"yes" | "no">("no");
+
+  // fbclid / UTM / cookies Meta : capturés à l'arrivée, avant que la personne
+  // navigue et que les paramètres d'URL disparaissent.
+  useEffect(() => {
+    captureAttribution();
+  }, []);
 
   const handleFormComplete = async (finalAnswers: Answers) => {
     trackStep("analyse");

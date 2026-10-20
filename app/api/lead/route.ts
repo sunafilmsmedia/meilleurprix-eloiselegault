@@ -3,16 +3,15 @@ import { computeScoring } from "@/lib/scoring";
 import { REGIONS } from "@/lib/regions";
 import { BRAND } from "@/lib/brand";
 import type { Answers, LeadPayload, LeadType } from "@/lib/types";
+import type { Attribution } from "@/lib/attribution";
 
 export const runtime = "nodejs";
 
 interface IncomingBody extends Partial<LeadPayload> {
   answers?: Answers;
   leadType?: LeadType;
-  // Attribution Meta (capturés côté client)
-  fbclid?: string;
-  fbc?: string;
-  fbp?: string;
+  // Attribution publicitaire capturée côté navigateur (lib/attribution.ts).
+  attribution?: Attribution;
 }
 
 function splitName(full: string): { firstName: string; lastName: string } {
@@ -30,6 +29,10 @@ export async function POST(req: Request) {
   }
 
   const { name, phone, email, consent, answers } = body;
+  const attr: Attribution = body.attribution ?? {
+    fbclid: "", fbc: "", fbp: "", utmSource: "", utmMedium: "", utmCampaign: "",
+    utmContent: "", utmTerm: "", gclid: "", ttclid: "", referrer: "", landingUrl: "",
+  };
   const leadType: LeadType = body.leadType ?? "evaluation";
 
   if (!name || !email || !consent || !answers) {
@@ -80,10 +83,25 @@ export async function POST(req: Request) {
     lead_type: jour ? "lead_jour" : "lead_nuit",
     heureQuebec,
 
-    // Attribution Meta
-    fbclid: body.fbclid ?? "",
-    fbc: body.fbc ?? "",
-    fbp: body.fbp ?? "",
+    // ─── Attribution publicitaire ─────────────────────────────────────
+    // fbc/fbp/fbclid : ce que Meta demande pour rattacher le lead à la pub
+    // (Conversions API). userAgent + ip viennent de la requête serveur, ils
+    // sont exigés en plus des identifiants côté navigateur.
+    fbclid: attr.fbclid ?? "",
+    fbc: attr.fbc ?? "",
+    fbp: attr.fbp ?? "",
+    utmSource: attr.utmSource ?? "",
+    utmMedium: attr.utmMedium ?? "",
+    utmCampaign: attr.utmCampaign ?? "",
+    utmContent: attr.utmContent ?? "",
+    utmTerm: attr.utmTerm ?? "",
+    gclid: attr.gclid ?? "",
+    ttclid: attr.ttclid ?? "",
+    referrer: attr.referrer ?? "",
+    landingUrl: attr.landingUrl ?? "",
+    eventSourceUrl: attr.landingUrl ?? "",
+    userAgent: req.headers.get("user-agent") ?? "",
+    clientIp: (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim(),
 
     // Scoring
     score: scoring.score,
@@ -106,6 +124,7 @@ export async function POST(req: Request) {
 
     // Données brutes
     lead: { name, phone, email },
+    attribution: attr,
     scoring: { score: scoring.score, verdict: scoring.verdict },
     answers,
   };
