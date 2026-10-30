@@ -9,14 +9,20 @@ export type QuestionId =
   | "interiorCondition"
   | "curbAppeal"
   | "hasContract"
-  | "region";
+  | "region"
+  | "name"
+  | "phone"
+  | "email";
 
 export type QuestionKind =
   | "choice"
   | "number"
   | "currency"
   | "boolean"
-  | "region";
+  | "region"
+  | "text"
+  | "tel"
+  | "email";
 
 export interface Choice<V extends string = string> {
   value: V;
@@ -132,6 +138,24 @@ export const QUESTIONS: QuestionDef[] = [
     title: "Dans quel secteur se trouve votre propriété ?",
     subtitle: "Écrivez votre secteur et choisissez-le dans la liste.",
   },
+  {
+    id: "name",
+    kind: "text",
+    title: "Quel est votre prénom ?",
+    subtitle: "Pour qu'on sache à qui s'adresser.",
+  },
+  {
+    id: "phone",
+    kind: "tel",
+    title: "À quel numéro peut-on vous joindre ?",
+    subtitle: "Pour qu'un courtier puisse vous joindre rapidement.",
+  },
+  {
+    id: "email",
+    kind: "email",
+    title: "Où voulez-vous recevoir votre analyse ?",
+    subtitle: "Gratuite, confidentielle, avec les ventes comparables de votre secteur.",
+  },
 ];
 
 export function getVisibleQuestions(answers: Answers): QuestionDef[] {
@@ -154,5 +178,11 @@ export function isAnswered(q: QuestionDef, a: Answers): boolean {
       if (a.hasContract === true && a.wantsToSwitch === true) return true;
       return false;
     case "region": return !!a.region;
+    case "name": return !!a.name?.trim();
+    case "phone": return (a.phone ?? "").replace(/\D/g, "").length >= 10;
+    case "email":
+      return (
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((a.email ?? "").trim()) && a.consent === true
+      );
   }
 }

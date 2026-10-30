@@ -12,6 +12,7 @@ import BooleanQuestion from "./questions/BooleanQuestion";
 import CurrencyQuestion from "./questions/CurrencyQuestion";
 import RegionSearch from "./questions/RegionSearch";
 import ExistingBrokerBlocker from "./questions/ExistingBrokerBlocker";
+import TextQuestion from "./questions/TextQuestion";
 
 interface Props {
   onComplete: (answers: Answers) => void;
@@ -33,6 +34,9 @@ const STEP_NAMES: Record<string, string> = {
   curbAppeal: "attrait_exterieur",
   hasContract: "courtier_existant",
   region: "secteur",
+  name: "prenom",
+  phone: "telephone",
+  email: "courriel",
 };
 // Champs dont la valeur est un choix prédéfini → sûr à transmettre comme "value".
 const CHOICE_FIELDS = new Set([
@@ -356,6 +360,73 @@ function QuestionRenderer({
           onChange={(id) => onUpdate({ region: id }, true, 1100)}
         />
       );
+    case "name":
+      return (
+        <TextQuestion
+          type="text"
+          autoComplete="given-name"
+          placeholder="Marie"
+          value={answers.name}
+          onChange={(v) => onUpdate({ name: v }, false)}
+        />
+      );
+    case "phone": {
+      const digits = (answers.phone ?? "").replace(/\D/g, "");
+      const error = answers.phone && digits.length < 10 ? "Numéro invalide (10 chiffres minimum)." : undefined;
+      return (
+        <TextQuestion
+          type="tel"
+          autoComplete="tel"
+          placeholder="(450) 555-0123"
+          helper="Pour qu'un courtier puisse vous joindre rapidement."
+          error={error}
+          value={answers.phone}
+          onChange={(v) => onUpdate({ phone: v }, false)}
+        />
+      );
+    }
+    case "email": {
+      const email = (answers.email ?? "").trim();
+      const error = email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+        ? "Format de courriel invalide."
+        : undefined;
+      return (
+        <div>
+          <TextQuestion
+            type="email"
+            autoComplete="email"
+            placeholder="marie@exemple.ca"
+            error={error}
+            value={answers.email}
+            onChange={(v) => onUpdate({ email: v }, false)}
+          />
+          <label className="flex items-start gap-3 cursor-pointer group select-none mt-6">
+            <span className="relative shrink-0 mt-0.5">
+              <input
+                type="checkbox"
+                checked={!!answers.consent}
+                onChange={(e) => onUpdate({ consent: e.target.checked }, false)}
+                className="peer sr-only"
+              />
+              <span className="block w-5 h-5 rounded-md border border-[var(--color-slate-accent)]/40 bg-white/[0.08] peer-checked:bg-[var(--color-gold)] peer-checked:border-[var(--color-gold-soft)] transition-colors" />
+              <svg
+                className="absolute inset-0 m-auto w-3 h-3 text-[#0b1f3f] opacity-0 peer-checked:opacity-100 transition-opacity"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M2 6.5L4.5 9L10 3.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            <span className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              J&apos;accepte que {BRAND.teamName} m&apos;envoie mon analyse gratuite et puisse
+              me contacter au sujet de la vente de ma propriété.
+            </span>
+          </label>
+        </div>
+      );
+    }
     default:
       return null;
   }

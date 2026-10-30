@@ -33,6 +33,20 @@ export interface Answers {
   hasContract?: boolean;
   wantsToSwitch?: boolean;
   region?: string;
+  // Coordonnées — dernières étapes du formulaire, posées une par une comme
+  // les questions précédentes (voir lib/questions.ts).
+  name?: string;
+  phone?: string;
+  email?: string;
+  consent?: boolean;
+}
+
+/** Les réponses de propriété seules, sans les coordonnées — c'est ce qu'on
+ *  envoie à /api/analyze (le rapport IA n'a pas besoin de PII). */
+export function stripContact(a: Answers): Answers {
+  const { name, phone, email, consent, ...rest } = a;
+  void name, void phone, void email, void consent;
+  return rest;
 }
 
 export type Verdict = "favorable" | "moyen" | "defavorable";
