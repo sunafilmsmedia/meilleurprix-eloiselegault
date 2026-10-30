@@ -12,7 +12,7 @@ import ResultsScreen from "@/components/results/ResultsScreen";
 import { trackLeadWithMatching } from "@/components/MetaPixel";
 import { trackStep } from "@/lib/track";
 import { attributionForSubmit, captureAttribution } from "@/lib/attribution";
-import { stripContact } from "@/lib/types";
+import { splitName, stripContact } from "@/lib/types";
 import type { AnalyzeResponse, Answers } from "@/lib/types";
 
 const HeroBackground = dynamic(() => import("@/components/HeroBackground"), { ssr: false });
@@ -46,7 +46,8 @@ export default function Home() {
 
     const startedAt = performance.now();
     const propertyAnswers = stripContact(finalAnswers);
-    const firstName = finalAnswers.name?.trim() ?? "";
+    const fullName = finalAnswers.name?.trim() ?? "";
+    const { firstName, lastName } = splitName(fullName);
 
     // Coordonnées déjà recueillies (dernières étapes du formulaire) : on
     // transmet le lead tout de suite, en parallèle du rapport IA — pas
@@ -55,7 +56,7 @@ export default function Home() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: firstName,
+        name: fullName,
         email: finalAnswers.email?.trim() ?? "",
         phone: finalAnswers.phone?.trim() || undefined,
         consent: finalAnswers.consent ?? false,
@@ -89,6 +90,7 @@ export default function Home() {
         email: finalAnswers.email?.trim(),
         phone: finalAnswers.phone?.trim(),
         firstName: firstName || undefined,
+        lastName: lastName || undefined,
       },
       {
         content_category: "real_estate_best_price",

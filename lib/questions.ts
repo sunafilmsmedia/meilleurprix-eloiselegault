@@ -141,8 +141,8 @@ export const QUESTIONS: QuestionDef[] = [
   {
     id: "name",
     kind: "text",
-    title: "Quel est votre prénom ?",
-    subtitle: "Pour qu'on sache à qui s'adresser.",
+    title: "Quel est votre nom complet ?",
+    subtitle: "Prénom et nom, pour qu'on sache à qui s'adresser.",
   },
   {
     id: "phone",

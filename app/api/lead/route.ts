@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { computeScoring } from "@/lib/scoring";
 import { REGIONS } from "@/lib/regions";
 import { BRAND } from "@/lib/brand";
+import { splitName } from "@/lib/types";
 import type { Answers, LeadPayload, LeadType } from "@/lib/types";
 import type { Attribution } from "@/lib/attribution";
 
@@ -12,12 +13,6 @@ interface IncomingBody extends Partial<LeadPayload> {
   leadType?: LeadType;
   // Attribution publicitaire capturée côté navigateur (lib/attribution.ts).
   attribution?: Attribution;
-}
-
-function splitName(full: string): { firstName: string; lastName: string } {
-  const parts = full.trim().split(/\s+/);
-  if (parts.length === 1) return { firstName: parts[0], lastName: "" };
-  return { firstName: parts[0], lastName: parts.slice(1).join(" ") };
 }
 
 export async function POST(req: Request) {

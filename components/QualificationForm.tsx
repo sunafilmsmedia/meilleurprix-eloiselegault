@@ -364,8 +364,8 @@ function QuestionRenderer({
       return (
         <TextQuestion
           type="text"
-          autoComplete="given-name"
-          placeholder="Marie"
+          autoComplete="name"
+          placeholder="Marie Tremblay"
           value={answers.name}
           onChange={(v) => onUpdate({ name: v }, false)}
         />

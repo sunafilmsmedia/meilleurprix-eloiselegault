@@ -49,6 +49,14 @@ export function stripContact(a: Answers): Answers {
   return rest;
 }
 
+/** "Marie Tremblay" → { firstName: "Marie", lastName: "Tremblay" }. */
+export function splitName(full: string): { firstName: string; lastName: string } {
+  const parts = full.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return { firstName: "", lastName: "" };
+  if (parts.length === 1) return { firstName: parts[0], lastName: "" };
+  return { firstName: parts[0], lastName: parts.slice(1).join(" ") };
+}
+
 export type Verdict = "favorable" | "moyen" | "defavorable";
 
 export interface ScoringResult {
