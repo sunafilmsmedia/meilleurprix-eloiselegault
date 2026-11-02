@@ -3,7 +3,7 @@
 import Script from "next/script";
 
 // Microsoft Clarity d'Éloïse Legault — NEXT_PUBLIC_CLARITY_ID le remplace si renseigné.
-const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_ID || "z5fz4rk744";
+const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_ID || "z7glx8iodl";
 
 export default function Clarity() {
   if (!CLARITY_PROJECT_ID) return null;
