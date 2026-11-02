@@ -107,7 +107,7 @@ export const BRAND: BrandConfig = {
     title: "Ta propriété se vendra-t-elle au meilleur prix ?",
     titleHighlight: "au meilleur prix",
     subtitle:
-      "Répondez à 9 questions et recevez une analyse honnête et confidentielle des facteurs qui font monter ou baisser votre prix de vente.",
+      "Répondez à 11 questions et recevez une analyse honnête et confidentielle des facteurs qui font monter ou baisser votre prix de vente.",
     signature: "Laurentides",
     cta: "Commencer mon analyse",
     ctaHint: "3 minutes — gratuit et confidentiel",
