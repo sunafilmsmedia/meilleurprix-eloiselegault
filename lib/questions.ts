@@ -7,7 +7,6 @@ export type QuestionId =
   | "bigThree"
   | "estimatedValue"
   | "interiorCondition"
-  | "curbAppeal"
   | "hasContract"
   | "region"
   | "name"
@@ -113,19 +112,6 @@ export const QUESTIONS: QuestionDef[] = [
     ],
   },
   {
-    id: "curbAppeal",
-    kind: "choice",
-    title: "Est-ce qu'il y a un « effet wow » quand un acheteur arrive devant ?",
-    subtitle: "Aménagement paysager, porte d'entrée, façade : c'est la première impression.",
-    autoAdvance: true,
-    choices: [
-      { value: "coup_de_coeur", label: "Coup de cœur assuré" },
-      { value: "correct", label: "Correct, sans plus" },
-      { value: "ameliorations", label: "Quelques améliorations à faire", hint: "Plates-bandes, peinture, éclairage" },
-      { value: "manque_amour", label: "Ça manque d'amour" },
-    ],
-  },
-  {
     id: "hasContract",
     kind: "boolean",
     title: "Travaillez-vous déjà avec un courtier ?",
@@ -170,7 +156,6 @@ export function isAnswered(q: QuestionDef, a: Answers): boolean {
     case "bigThree": return !!a.bigThree;
     case "estimatedValue": return typeof a.estimatedValue === "number" && a.estimatedValue > 0;
     case "interiorCondition": return !!a.interiorCondition;
-    case "curbAppeal": return !!a.curbAppeal;
     case "hasContract":
       // "Non" = on peut continuer. "Oui" = bloqué SAUF si la personne
       // clique "Je veux changer" (wantsToSwitch = true).

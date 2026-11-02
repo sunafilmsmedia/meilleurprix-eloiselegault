@@ -31,17 +31,16 @@ const STEP_NAMES: Record<string, string> = {
   bigThree: "trois_gros",
   estimatedValue: "valeur_estimee",
   interiorCondition: "etat_interieur",
-  curbAppeal: "attrait_exterieur",
   hasContract: "courtier_existant",
   region: "secteur",
-  name: "prenom",
+  name: "nom_complet",
   phone: "telephone",
   email: "courriel",
 };
 // Champs dont la valeur est un choix prédéfini → sûr à transmettre comme "value".
 const CHOICE_FIELDS = new Set([
   "propertyType", "sellTimeline", "pricingMethod", "bigThree",
-  "interiorCondition", "curbAppeal", "hasContract",
+  "interiorCondition", "hasContract",
 ]);
 
 // Émet l'événement d'étape à partir de la réponse fournie (jamais de PII).
@@ -326,14 +325,6 @@ function QuestionRenderer({
           choices={choices!}
           value={answers.interiorCondition}
           onChange={(v) => onUpdate({ interiorCondition: v as Answers["interiorCondition"] }, autoAdvance)}
-        />
-      );
-    case "curbAppeal":
-      return (
-        <ChoiceQuestion
-          choices={choices!}
-          value={answers.curbAppeal}
-          onChange={(v) => onUpdate({ curbAppeal: v as Answers["curbAppeal"] }, autoAdvance)}
         />
       );
     case "hasContract":

@@ -53,13 +53,6 @@ const INTERIOR: Record<string, Rule> = {
   ne_sait_pas: { delta: -3, label: "État intérieur à valider avant la mise en marché" },
 };
 
-const CURB_APPEAL: Record<string, Rule> = {
-  coup_de_coeur: { delta: 10, label: "Attrait extérieur fort — bonne première impression" },
-  correct: { delta: 2, label: "Attrait extérieur correct, sans effet wow" },
-  ameliorations: { delta: -3, label: "Façade et terrain à rafraîchir" },
-  manque_amour: { delta: -8, label: "Première impression faible — des acheteurs passeront tout droit" },
-};
-
 const TIMELINE: Record<string, Rule> = {
   moins_3_mois: { delta: 0, label: "Vente à court terme — la préparation doit commencer maintenant" },
   "3_6_mois": { delta: 4, label: "3 à 6 mois — assez de temps pour bien préparer la propriété" },
@@ -74,7 +67,6 @@ export function computeScoring(answers: Answers): ScoringResult {
   score += apply(factors, answers.pricingMethod && PRICING[answers.pricingMethod]);
   score += apply(factors, answers.bigThree && BIG_THREE[answers.bigThree]);
   score += apply(factors, answers.interiorCondition && INTERIOR[answers.interiorCondition]);
-  score += apply(factors, answers.curbAppeal && CURB_APPEAL[answers.curbAppeal]);
   score += apply(factors, answers.sellTimeline && TIMELINE[answers.sellTimeline]);
 
   const finalScore = Math.round(clamp(score, 0, 100));
