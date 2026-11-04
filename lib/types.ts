@@ -30,28 +30,6 @@ export interface Answers {
   hasContract?: boolean;
   wantsToSwitch?: boolean;
   region?: string;
-  // Coordonnées — dernières étapes du formulaire, posées une par une comme
-  // les questions précédentes (voir lib/questions.ts).
-  name?: string;
-  phone?: string;
-  email?: string;
-  consent?: boolean;
-}
-
-/** Les réponses de propriété seules, sans les coordonnées — c'est ce qu'on
- *  envoie à /api/analyze (le rapport IA n'a pas besoin de PII). */
-export function stripContact(a: Answers): Answers {
-  const { name, phone, email, consent, ...rest } = a;
-  void name, void phone, void email, void consent;
-  return rest;
-}
-
-/** "Marie Tremblay" → { firstName: "Marie", lastName: "Tremblay" }. */
-export function splitName(full: string): { firstName: string; lastName: string } {
-  const parts = full.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return { firstName: "", lastName: "" };
-  if (parts.length === 1) return { firstName: parts[0], lastName: "" };
-  return { firstName: parts[0], lastName: parts.slice(1).join(" ") };
 }
 
 export type Verdict = "favorable" | "moyen" | "defavorable";
@@ -100,6 +78,8 @@ export type LeadType = "evaluation";
 
 export interface LeadPayload {
   name: string;
+  firstName?: string;
+  lastName?: string;
   phone?: string;
   email: string;
   consent: boolean;

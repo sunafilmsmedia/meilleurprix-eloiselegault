@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { computeScoring } from "@/lib/scoring";
 import { REGIONS } from "@/lib/regions";
 import { BRAND } from "@/lib/brand";
-import { splitName } from "@/lib/types";
 import type { Answers, LeadPayload, LeadType } from "@/lib/types";
 import type { Attribution } from "@/lib/attribution";
 
@@ -13,6 +12,12 @@ interface IncomingBody extends Partial<LeadPayload> {
   leadType?: LeadType;
   // Attribution publicitaire capturée côté navigateur (lib/attribution.ts).
   attribution?: Attribution;
+}
+
+function splitName(full: string): { firstName: string; lastName: string } {
+  const parts = full.trim().split(/\s+/);
+  if (parts.length === 1) return { firstName: parts[0], lastName: "" };
+  return { firstName: parts[0], lastName: parts.slice(1).join(" ") };
 }
 
 export async function POST(req: Request) {
@@ -41,7 +46,10 @@ export async function POST(req: Request) {
   // plus besoin d'accompagnement (lead chaud, pas un lead à écarter).
   const scoring = computeScoring(answers);
 
-  const { firstName, lastName } = splitName(name);
+  // Prénom/nom saisis séparément (ContactForm) ; sinon on découpe le nom complet.
+  const { firstName, lastName } = body.firstName?.trim()
+    ? { firstName: body.firstName.trim(), lastName: body.lastName?.trim() ?? "" }
+    : splitName(name);
   // Secteur de la liste → son nom ; sinon on garde le texte libre saisi.
   const regionName = REGIONS.find((r) => r.id === answers.region)?.name ?? answers.region ?? "";
 
