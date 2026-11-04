@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import type { AnalyzeResponse, Answers, Verdict } from "@/lib/types";
 import ContactForm from "./ContactForm";
-import { BRAND, brokersInlineNames } from "@/lib/brand";
+import { BRAND } from "@/lib/brand";
 
 interface Props {
   analyze: AnalyzeResponse;
@@ -84,10 +84,6 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
           <h1 className="display-title text-[1.9rem] sm:text-5xl text-[var(--color-brand-100)] text-balance">
             Votre analyse est prête.
           </h1>
-          <p className="mt-5 text-base sm:text-lg text-slate-400 leading-relaxed text-balance max-w-md mx-auto">
-            Laissez-nous vos coordonnées pour la débloquer et recevoir votre appel personnalisé
-            avec {brokersInlineNames()}.
-          </p>
         </motion.div>
 
         <div className="mt-10">
